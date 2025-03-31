@@ -153,36 +153,64 @@ document.addEventListener("DOMContentLoaded", ()=>{
    
 
 
-    function guardarDatos(datos,callback){
-        setTimeout(function(){
-            console.log("la base de datos ha sido actualizada " + datos)
-        },1000)
-        callback(datos)
+    function guardarDatos(datos){
+        return new Promise((resolve, reject) => {
+            
+            setTimeout(function(){
+                console.log("la base de datos ha sido actualizada " + datos)
+            },1000)
+            resolve("200 ok one")
+        })
     }
     
-    function cerrandoServidor(datos,callback){
-        setTimeout(function(){
-            console.log("cerrando conexion con el servidor " + datos)
-        },2000)
-        callback()
+    function cerrandoServidor(datos){
+        
+        return new Promise((resolve, reject) => {
+            
+            setTimeout(function(){
+                console.log("cerrando conexion con el servidor " + datos)
+            },2000)
+            resolve("200 ok two")
+        })
+        
     }
 
 
          
     close.addEventListener("click",()=>{
         allAnimals = {}
+        let datos = "200"
+
+        async function cerrarTodasLasDependencias(datos) {
+            let responseOne = await guardarDatos(datos)
+            await cerrandoServidor(responseOne).then(()=>{
+
+                console.log("all ok 3")
+                alert("200")
+                alert("Saliendo del programa")
+                window.close()
+            })
+        }
+        cerrarTodasLasDependencias(datos)
+
+        // guardarDatos("200").then(cerrandoServidor).then(()=> {
+        //     console.log("all ok 3")
+        //     alert("200")
+        //     alert("Saliendo del programa")
+        //     window.close()
+        // })
 
 
-        guardarDatos("200",function(marca){
-            cerrandoServidor(marca,function () {
-                setTimeout(function () { 
-                    console.log("all ok")
-                    alert("200")
-                    alert("Saliendo del programa")
-                    window.close()
-            },1000)
-              })  
-          })
+        // guardarDatos("200",function(marca){
+        //     cerrandoServidor(marca,function () {
+        //         setTimeout(function () { 
+        //             console.log("all ok")
+        //             alert("200")
+        //             alert("Saliendo del programa")
+        //             window.close()
+        //     },1000)
+        //       })  
+        //   })
 
 
         console.log(allAnimals)
